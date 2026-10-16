@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>온라인상담 | AIEcoGenLab</title>
+<meta name="description" content="AIEcoGenLab(에이아이에코젠랩) - 한우 유전정보 맞춤형 저탄소 인공지능 서비스: 유전정보 분석, 사료설계, 메탄 저감, 인공지능 서비스">
+<link rel="icon" href="../favicon.ico">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-root="../" data-section="support" data-page="consult">
+<div id="eg-header"></div>
+<div id="eg-subvisual"></div>
+<main id="main">
+<section class="section">
+  <div class="container">
+    <h2 class="page-title">온라인상담</h2>
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-4 reveal">
+        <div class="p-4 rounded-3 bg-eg-pale h-100">
+          <h3 class="fs-5 fw-bold mb-3">상담 안내</h3>
+          <p class="text-secondary">유전정보 분석, 사료설계, 메탄 저감, 인공지능 서비스에 대해 궁금한 점을 남겨 주시면 확인 후 답변드리겠습니다.</p>
+          <ul class="list-unstyled contact-list mt-4 mb-0">
+            <li><i class="bi bi-envelope"></i><a class="text-reset" href="mailto:aiecogenlab@gmail.com">aiecogenlab@gmail.com</a></li>
+            <li><i class="bi bi-telephone"></i><a class="text-reset" href="tel:05067802164">050-6780-2164</a></li>
+            <li><i class="bi bi-telephone"></i><span>Lab: <a class="text-reset" href="tel:028804819">02-880-4819</a></span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-8 reveal">
+        <form id="consultForm" class="needs-validation" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="cName" class="form-label">이름 / 농장명 <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="cName" required>
+              <div class="invalid-feedback">이름 또는 농장명을 입력해 주세요.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="cPhone" class="form-label">연락처 <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" id="cPhone" placeholder="010-0000-0000" required>
+              <div class="invalid-feedback">연락처를 입력해 주세요.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="cEmail" class="form-label">이메일</label>
+              <input type="email" class="form-control" id="cEmail">
+              <div class="invalid-feedback">이메일 형식을 확인해 주세요.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="cService" class="form-label">문의 분야</label>
+              <select class="form-select" id="cService">
+                <option value="genetics">유전정보 분석 서비스</option>
+                <option value="feeding">사료설계 서비스</option>
+                <option value="methane">메탄 저감 서비스</option>
+                <option value="ai">인공지능 서비스</option>
+                <option value="etc">기타 문의</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="cTitle" class="form-label">제목 <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="cTitle" required>
+              <div class="invalid-feedback">제목을 입력해 주세요.</div>
+            </div>
+            <div class="col-12">
+              <label for="cBody" class="form-label">문의 내용 <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="cBody" rows="7" placeholder="사육 두수, 분석 희망 개체 수, 문의하실 내용 등을 적어 주세요." required></textarea>
+              <div class="invalid-feedback">문의 내용을 입력해 주세요.</div>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="cAgree" required>
+                <label class="form-check-label" for="cAgree">상담 답변을 위한 개인정보(이름, 연락처, 이메일) 수집·이용에 동의합니다. <span class="text-danger">*</span></label>
+                <div class="invalid-feedback">개인정보 수집·이용에 동의해 주세요.</div>
+              </div>
+            </div>
+            <div class="col-12 d-flex flex-wrap gap-2 align-items-center">
+              <button class="btn btn-primary btn-lg px-5" type="submit"><i class="bi bi-send me-1"></i>문의하기</button>
+              <small class="text-muted">‘문의하기’를 누르면 작성하신 내용이 담긴 메일 작성 창이 열립니다.</small>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function () {
+  var form = document.getElementById('consultForm');
+  var sel = document.getElementById('cService');
+  var q = new URLSearchParams(location.search).get('service');
+  if (q && sel.querySelector('option[value="' + q + '"]')) sel.value = q;
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.classList.add('was-validated'); return; }
+    var v = function (id) { return document.getElementById(id).value.trim(); };
+    var subject = '[홈페이지 상담] ' + v('cTitle');
+    var body = '■ 문의 분야: ' + sel.options[sel.selectedIndex].text + '\n' +
+      '■ 이름/농장명: ' + v('cName') + '\n■ 연락처: ' + v('cPhone') + '\n■ 이메일: ' + v('cEmail') + '\n\n' + v('cBody');
+    window.location.href = 'mailto:aiecogenlab@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  });
+})();
+</script>
+</main>
+<div id="eg-footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/layout.js"></script>
+</body>
+</html>
