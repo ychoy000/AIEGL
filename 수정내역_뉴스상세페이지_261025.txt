@@ -1,0 +1,279 @@
+﻿AIEcoGenLab 홈페이지 수정 내역 — 뉴스 상세 페이지(news_page) 추가
+작성일: 2026-10-25   기준 폴더: C:\AIEGL\HPnew
+==========================================================================================
+[요약]
+ - 뉴스 카드(뉴스 목록·메인 화면)를 누르면 팝업 대신 상세 페이지(support/news-view.html?id=…)로 이동
+ - 상세 페이지: 제목 / 날짜 / 동영상(mp4, 약 1초 후 자동 재생) / 설명 / YouTube에서 보기 / [목록으로]
+ - mp4 파일을 찾지 못하면 YouTube 영상으로 자동 대체
+ - 강화섬약쑥한우 기사: 축산신문 기사 캡처(png) + 기사 본문 + 출처 표시
+
+[파일별 요약]
+  1. assets/js/board-data.js  (수정) 뉴스 4건에 video·youtube·caption / image·source·body 항목 추가, 인터뷰 제목 전체로 교체
+  2. assets/js/board.js       (수정) 뉴스 카드 → 상세 페이지 링크로 변경, 팝업 연결 코드 삭제
+  3. assets/css/style.css     (수정) 파일 끝에 뉴스 상세 페이지 스타일 추가
+  4. assets/js/news-view.js   (새 파일) 뉴스 상세 페이지 표시·자동 재생 스크립트
+  5. support/news-view.html   (새 파일) 뉴스 상세 페이지
+  ※ index.html, support/news.html, layout.js 는 변경 없음
+
+[표기 방법]  줄번호는 "수정 후" 파일 기준입니다. 위에서부터 차례로 고치면 줄번호가 그대로 맞습니다.
+   [추가] n~m행 : 새로 넣을 줄      [삭제] (수정 전 n~m행) : 지울 줄      [변경] : 수정 전 → 수정 후
+==========================================================================================
+
+■ assets\js\board-data.js   (수정 전 76행 → 수정 후 94행)
+------------------------------------------------------------------------------------------
+[추가] 7~10행 (수정 전 6행 다음에 삽입)
+   +    7:       - video   : 상세 페이지에서 자동 재생할 mp4 파일 (files/news/ 경로)
+   +    8:       - youtube : 유튜브 주소 (mp4 가 없으면 유튜브 영상을 대신 재생)
+   +    9:       - caption : 영상 아래 설명 글
+   +   10:       - image / body / source : 신문기사형 뉴스 (기사 캡처 이미지, 기사 본문, 출처)
+[변경] 수정 전 20행 → 수정 후 24~27행
+   -   20:     ]
+   +   24:     ],
+   +   25:     video: 'files/news/회사 주요 기능 자료.mp4',
+   +   26:     youtube: 'https://www.youtube.com/watch?v=_t2cmDgCL2E',
+   +   27:     caption: '1. 유전정보기반 AI활용 친환경 스마트 축산 플랫폼 사업 2. 한우 유전정보 맞춤형 사양 기술 서비스 3. DNA분석: 중요형질 유전체 육종가 평가 4. 저탄소 사양 전략'
+[변경] 수정 전 30행 → 수정 후 37~40행
+   -   30:     ]
+   +   37:     ],
+   +   38:     video: 'files/news/AI 한우 사양 관리.mp4',
+   +   39:     youtube: 'https://www.youtube.com/watch?v=nD_-7oUwdMg',
+   +   40:     caption: '[ 미래에는 AI 접목 기술 개발이 필요합니다 ] 이를 통해서, 한우 생산성의 획기적인 향상이 가능하며, 자동화/무인 농장 시스템에 대한 대비와 노동력 대체 방안 모색이 가능합니다. 데이터셋 구축하고, 예측 알고리즘 개발하며, 개발한 알고리즘 활용하여 ‘AI 활용 유전능력 맞춤형 정밀사양 서비스’를 실시할 계획입니다. 유전능력 분석부터 맞춤형 사양관리 및 경영 진단까지 AI 기반 종합 솔루션을 제공할 계획입니다.'
+[변경] 수정 전 38행 → 수정 후 48~53행
+   -   38:     files: []   /* TODO: 기사 원문 PDF 또는 사진 파일이 있으면 files/news/ 에 넣고 여기에 추가 */
+   +   48:     files: [
+   +   49:       { name: '강화섬약쑥한우(축산신문250818).png', path: 'files/news/강화섬약쑥한우(축산신문250818).png', size: '282 KB' }
+   +   50:     ],
+   +   51:     image: 'files/news/강화섬약쑥한우(축산신문250818).png',
+   +   52:     source: '축산신문 지방소식 · 축평원·강화축협·서울대, 업무협약 체결 (강화=김길호 기자, 2025.07.02)',
+   +   53:     body: '축산물품질평가원 서울지원(지원장 정진형)과 인천강화옹진축협(조합장 송정수, 이하 강화축협), 서울대학교 농생명공학부 및 ㈜에이아이에코젠랩(대표 백명기 교수)은 지난 6월 20일 강화축협 대회의실에서 ‘강화섬약쑥한우’ 브랜드의 품질 고급화를 통해 농가 소득 향상을 도모하기 위한 업무협약(MOU·사진)을 체결했다.\n이번 협약은 강화섬약쑥한우의 경쟁력 강화를 위한 민관학 협력 모델로, 각 기관은 역할을 분담해 실질적인 지원을 펼쳐나갈 계획이다.\n축산물품질평가원 서울지원은 보유한 빅데이터를 활용해 고급육 생산을 지원하고, 서울대학교 농생명공학부 및 ㈜에이아이에코젠랩은 한우의 유전적 특성에 기반한 초정밀 사양관리 컨설팅을 제공한다. 또한 강화축협은 한우대학 등을 통해 농가 교육을 진행할 예정이다.\n특히 이번 협약의 핵심은 인공지능 기반의 초정밀 컨설팅을 통해 개량 효율을 높이고, 생산 비용과 시간을 줄이면서 저탄소 한우 생산 기반을 구축하는 데 있어 지역 브랜드의 질적 성장에 기여할 것으로 기대된다.\n송정수 강화축협 조합장은 “이번 민관학 협력은 강화섬약쑥한우 브랜드를 한 단계 도약시키는 중요한 계기가 될 것”이라고 강조했다.'
+[변경] 수정 전 42행 → 수정 후 57행
+   -   42:     title: '에이아이에코젠랩, 한우 유전능력 맞…',   /* TODO: 기존 사이트에서 잘린 제목 — 전체 제목으로 교체 */
+   +   57:     title: '에이아이에코젠랩, 한우 유전능력 맞춤형 사양기술 서비스 개발 (백명기 에이아이에코젠랩 대표 인터뷰)',
+[변경] 수정 전 45~46행 → 수정 후 60~64행
+   -   45:     summary: '',
+   -   46:     files: []
+   +   60:     summary: '#에이아이에코젠랩 #한우 사양 #한우와 인공지능 #인공지능 — 백명기 에이아이에코젠랩 대표 인터뷰: 한우 유전능력 맞춤형 사양 기술 서비스 개발',
+   +   61:     files: [],
+   +   62:     video: 'files/news/에이아이에코젠랩, 한우 유전능력 맞춤형 사양기술 서비스 개발 (백명기 에이아이에코젠랩 대표 인터뷰).mp4',
+   +   63:     youtube: 'https://www.youtube.com/watch?v=Bl83HVaUszs',
+   +   64:     caption: '에이아이에코젠랩, 한우 유전능력 맞춤형 사양기술 서비스 개발 (백명기 에이아이에코젠랩 대표 인터뷰)'
+
+
+■ assets\js\board.js   (수정 전 162행 → 수정 후 158행)
+------------------------------------------------------------------------------------------
+[변경] 수정 전 101행 → 수정 후 101행
+   -  101:           return '<div class="col-sm-6 col-lg-3"><article class="news-card" tabindex="0" role="button" data-id="' + esc(p.id) + '" aria-label="' + esc(p.title) + ' 자세히 보기">' +
+   +  101:           return '<div class="col-sm-6 col-lg-3"><a class="news-card d-block text-decoration-none" href="' + root + 'support/news-view.html?id=' + encodeURIComponent(p.id) + '" data-id="' + esc(p.id) + '" aria-label="' + esc(p.title) + ' 자세히 보기">' +
+[변경] 수정 전 105~106행 → 수정 후 105~106행
+   -  105:             (p.files.length ? '<span class="att"><i class="bi bi-paperclip"></i> ' + p.files.length + '</span>' : '') +
+   -  106:             '</div></div></article></div>';
+   +  105:             (p.video || p.youtube ? '<span class="att"><i class="bi bi-play-circle"></i> 영상</span>' : (p.files.length ? '<span class="att"><i class="bi bi-paperclip"></i> ' + p.files.length + '</span>' : '')) +
+   +  106:             '</div></div></a></div>';
+[변경] 수정 전 109~113행 → 수정 후 109행
+   -  109:       grid.querySelectorAll('.news-card').forEach(function (c) {
+   -  110:         var post = data.filter(function (p) { return p.id === c.getAttribute('data-id'); })[0];
+   -  111:         c.addEventListener('click', function () { openPost(post); });
+   -  112:         c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPost(post); } });
+   -  113:       });
+   +  109:       /* 뉴스 카드는 상세 페이지(support/news-view.html)로 이동 — 모달 사용 안 함 */
+
+
+■ assets\css\style.css   (수정 전 408행 → 수정 후 434행)
+------------------------------------------------------------------------------------------
+[추가] 409~434행 (수정 전 408행 다음에 삽입)
+   +  409: /* ---------- 뉴스 상세 (support/news-view.html) ---------- */
+   +  410: .news-view { max-width: 980px; margin: 0 auto; border-top: 1px solid #555; }
+   +  411: .news-view .nv-head { text-align: center; padding: 1.6rem 1rem 1.4rem; border-bottom: 1px solid var(--eg-line); }
+   +  412: .news-view .nv-title { font-size: clamp(1.05rem, 1.6vw, 1.3rem); font-weight: 700; color: var(--eg-ink); margin: 0 0 .5rem; line-height: 1.5; }
+   +  413: .news-view .nv-date { font-size: .88rem; color: #999; }
+   +  414: .news-view .nv-body { padding: 1.6rem 0 1.4rem; border-bottom: 1px solid var(--eg-line); }
+   +  415: .news-view .nv-media { position: relative; background: #000; border-radius: .25rem; overflow: hidden; }
+   +  416: .news-view .nv-video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+   +  417: .news-view .nv-unmute {
+   +  418:   position: absolute; left: 50%; top: 1rem; transform: translateX(-50%); border: 0; border-radius: 999px;
+   +  419:   background: rgba(0,0,0,.72); color: #fff; padding: .5rem 1.1rem; font-weight: 600; font-size: .92rem; z-index: 2;
+   +  420: }
+   +  421: .news-view .nv-unmute:hover { background: var(--eg-green); }
+   +  422: .news-view .nv-caption { font-size: .9rem; color: #555; line-height: 1.7; margin: .8rem 0 0; }
+   +  423: .news-view .nv-article-img { text-align: center; margin: 0 0 1.4rem; }
+   +  424: .news-view .nv-article-img img { max-width: 100%; width: 520px; border: 1px solid var(--eg-line); border-radius: .25rem; }
+   +  425: .news-view .nv-text p { line-height: 1.9; color: #3b4236; margin-bottom: .9rem; }
+   +  426: .news-view .nv-source { font-size: .88rem; color: #888; margin: 1rem 0 0; }
+   +  427: .news-view .nv-links { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
+   +  428: .news-view .nv-yt-btn { background: #ff0000; color: #fff; border: 0; }
+   +  429: .news-view .nv-yt-btn:hover { background: #cc0000; color: #fff; }
+   +  430: .news-view .nv-foot { text-align: center; padding: 1.4rem 0 0; }
+   +  431: .news-view .nv-list-btn { background: #9a9a9a; color: #fff; border-radius: 0; padding: .45rem 2.2rem; font-size: .92rem; }
+   +  432: .news-view .nv-list-btn:hover { background: var(--eg-green); color: #fff; }
+   +  433: a.news-card { color: inherit; }
+   +  434: 
+
+
+■ assets\js\news-view.js   (새 파일, 121행) — 파일 전체 내용
+------------------------------------------------------------------------------------------
+   +    1: /* =========================================================
+   +    2:    뉴스 상세 페이지 (support/news-view.html?id=뉴스ID)
+   +    3:    - board-data.js 의 EG_NEWS 에서 id 로 글을 찾아 표시
+   +    4:    - video(mp4)가 있으면 페이지 표시 약 1초 후 자동 재생
+   +    5:      (브라우저가 소리 있는 자동재생을 막으면 음소거로 재생 + '소리 켜기' 버튼 표시)
+   +    6:    - mp4 가 없고 youtube 주소만 있으면 유튜브 영상을 삽입해 자동 재생
+   +    7:    - image/body 가 있으면 신문기사형(기사 캡처 + 본문)으로 표시
+   +    8:    ========================================================= */
+   +    9: (function () {
+   +   10:   'use strict';
+   +   11:   var root = window.EG_ROOT || '../';
+   +   12:   var AUTOPLAY_DELAY = 1000;   /* 자동 재생까지 대기 시간(ms) */
+   +   13: 
+   +   14:   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
+   +   15:   function fileUrl(p) { return root + encodeURI(p).replace(/#/g, '%23'); }
+   +   16:   function youtubeId(u) {
+   +   17:     var m = String(u || '').match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+   +   18:     return m ? m[1] : '';
+   +   19:   }
+   +   20: 
+   +   21:   var id = new URLSearchParams(location.search).get('id');
+   +   22:   var list = window.EG_NEWS || [];
+   +   23:   var post = list.filter(function (p) { return p.id === id; })[0];
+   +   24: 
+   +   25:   var titleEl = document.getElementById('nvTitle');
+   +   26:   var dateEl = document.getElementById('nvDate');
+   +   27:   var bodyEl = document.getElementById('nvBody');
+   +   28: 
+   +   29:   if (!post) {
+   +   30:     titleEl.textContent = '해당 뉴스를 찾을 수 없습니다.';
+   +   31:     bodyEl.innerHTML = '<p class="text-center text-muted py-5">목록에서 다시 선택해 주세요.</p>';
+   +   32:     return;
+   +   33:   }
+   +   34: 
+   +   35:   titleEl.textContent = post.title;
+   +   36:   dateEl.textContent = post.date;
+   +   37:   document.title = post.title + ' | 뉴스 | AIEcoGenLab';
+   +   38: 
+   +   39:   var h = '';
+   +   40:   var yid = youtubeId(post.youtube);
+   +   41: 
+   +   42:   /* ---- 영상형 뉴스 ---- */
+   +   43:   if (post.video) {
+   +   44:     h += '<div class="nv-media">' +
+   +   45:       '<video id="nvVideo" class="nv-video" controls playsinline preload="auto">' +
+   +   46:       '<source src="' + fileUrl(post.video) + '" type="video/mp4">' +
+   +   47:       '브라우저가 동영상 재생을 지원하지 않습니다.</video>' +
+   +   48:       '<button type="button" class="nv-unmute d-none" id="nvUnmute"><i class="bi bi-volume-mute-fill me-1"></i>소리 켜기</button>' +
+   +   49:       '</div>';
+   +   50:   } else if (yid) {
+   +   51:     h += '<div class="nv-media ratio ratio-16x9" id="nvYoutube" data-yid="' + yid + '"></div>';
+   +   52:   }
+   +   53: 
+   +   54:   /* ---- 신문기사형 뉴스 ---- */
+   +   55:   if (post.image) {
+   +   56:     h += '<figure class="nv-article-img"><img src="' + fileUrl(post.image) + '" alt="' + esc(post.title) + ' 기사 화면"></figure>';
+   +   57:   }
+   +   58:   if (post.caption) h += '<p class="nv-caption">' + esc(post.caption) + '</p>';
+   +   59:   if (post.body) {
+   +   60:     h += '<div class="nv-text">' + post.body.split('\n').map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</div>';
+   +   61:   }
+   +   62:   if (post.source) h += '<p class="nv-source"><i class="bi bi-newspaper me-1"></i>출처: ' + esc(post.source) + '</p>';
+   +   63: 
+   +   64:   /* ---- 유튜브 / 첨부 링크 ---- */
+   +   65:   var links = '';
+   +   66:   if (post.youtube) {
+   +   67:     links += '<a class="btn btn-sm nv-yt-btn" href="' + esc(post.youtube) + '" target="_blank" rel="noopener"><i class="bi bi-youtube me-1"></i>YouTube에서 보기</a>';
+   +   68:   }
+   +   69:   (post.files || []).forEach(function (f) {
+   +   70:     links += '<a class="btn btn-sm btn-outline-secondary" href="' + fileUrl(f.path) + '" download="' + esc(f.name) + '"><i class="bi bi-download me-1"></i>' + esc(f.name) + '</a>';
+   +   71:   });
+   +   72:   if (links) h += '<div class="nv-links">' + links + '</div>';
+   +   73: 
+   +   74:   bodyEl.innerHTML = h;
+   +   75: 
+   +   76:   /* ---- 약 1초 후 자동 재생 ---- */
+   +   77:   var video = document.getElementById('nvVideo');
+   +   78:   if (video) {
+   +   79:     var unmute = document.getElementById('nvUnmute');
+   +   80:     var failed = false;
+   +   81:     video.addEventListener('error', fallbackToYoutube, true);
+   +   82:     video.querySelector('source').addEventListener('error', fallbackToYoutube);
+   +   83:     setTimeout(function () {
+   +   84:       if (failed) return;
+   +   85:       video.muted = false;
+   +   86:       var p = video.play();
+   +   87:       if (p && p.catch) {
+   +   88:         p.catch(function () {
+   +   89:           /* 소리 있는 자동재생이 막힌 경우: 음소거로 재생 */
+   +   90:           video.muted = true;
+   +   91:           video.play().then(function () { unmute.classList.remove('d-none'); }).catch(function () {});
+   +   92:         });
+   +   93:       }
+   +   94:     }, AUTOPLAY_DELAY);
+   +   95:     unmute.addEventListener('click', function () {
+   +   96:       video.muted = false; video.volume = 1; video.play();
+   +   97:       unmute.classList.add('d-none');
+   +   98:     });
+   +   99:     video.addEventListener('volumechange', function () { if (!video.muted) unmute.classList.add('d-none'); });
+   +  100: 
+   +  101:     /* mp4 파일을 못 찾으면 유튜브로 대체 */
+   +  102:     function fallbackToYoutube() {
+   +  103:       if (failed || !yid) return;
+   +  104:       failed = true;
+   +  105:       var media = video.parentNode;
+   +  106:       media.outerHTML = '<div class="nv-media ratio ratio-16x9" id="nvYoutube" data-yid="' + yid + '"></div>';
+   +  107:       embedYoutube();
+   +  108:     }
+   +  109:   }
+   +  110: 
+   +  111:   function embedYoutube() {
+   +  112:     var box = document.getElementById('nvYoutube');
+   +  113:     if (!box) return;
+   +  114:     setTimeout(function () {
+   +  115:       box.innerHTML = '<iframe src="https://www.youtube.com/embed/' + box.getAttribute('data-yid') +
+   +  116:         '?autoplay=1&mute=1&playsinline=1&rel=0" title="' + esc(post.title) + '" ' +
+   +  117:         'allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+   +  118:     }, AUTOPLAY_DELAY);
+   +  119:   }
+   +  120:   embedYoutube();
+   +  121: })();
+
+■ support\news-view.html   (새 파일, 42행) — 파일 전체 내용
+------------------------------------------------------------------------------------------
+   +    1: <!doctype html>
+   +    2: <html lang="ko">
+   +    3: <head>
+   +    4: <meta charset="utf-8">
+   +    5: <meta name="viewport" content="width=device-width, initial-scale=1">
+   +    6: <title>뉴스 | AIEcoGenLab</title>
+   +    7: <meta name="description" content="AIEcoGenLab(에이아이에코젠랩) - 한우 유전정보 맞춤형 저탄소 인공지능 서비스: 유전정보 분석, 사료설계, 메탄 저감, 인공지능 서비스">
+   +    8: <link rel="icon" href="../favicon.ico">
+   +    9: <link rel="preconnect" href="https://cdn.jsdelivr.net">
+   +   10: <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+   +   11: <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+   +   12: <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+   +   13: <link rel="stylesheet" href="../assets/css/style.css">
+   +   14: </head>
+   +   15: <body data-root="../" data-section="support" data-page="news">
+   +   16: <div id="eg-header"></div>
+   +   17: <div id="eg-subvisual"></div>
+   +   18: <main id="main">
+   +   19: <section class="section">
+   +   20:   <div class="container">
+   +   21:     <h2 class="page-title">뉴스</h2>
+   +   22:     <!-- 뉴스 상세 : 내용은 assets/js/news-view.js 가 board-data.js 의 EG_NEWS 에서 ?id= 로 찾아 채웁니다 -->
+   +   23:     <article class="news-view" id="newsView" aria-live="polite">
+   +   24:       <header class="nv-head">
+   +   25:         <h3 class="nv-title" id="nvTitle">뉴스를 불러오는 중입니다…</h3>
+   +   26:         <div class="nv-date" id="nvDate"></div>
+   +   27:       </header>
+   +   28:       <div class="nv-body" id="nvBody"></div>
+   +   29:       <div class="nv-foot">
+   +   30:         <a class="btn nv-list-btn" href="news.html">목록으로</a>
+   +   31:       </div>
+   +   32:     </article>
+   +   33:   </div>
+   +   34: </section>
+   +   35: </main>
+   +   36: <div id="eg-footer"></div>
+   +   37: <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   +   38: <script src="../assets/js/layout.js"></script>
+   +   39: <script src="../assets/js/board-data.js"></script>
+   +   40: <script src="../assets/js/news-view.js"></script>
+   +   41: </body>
+   +   42: </html>
