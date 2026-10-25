@@ -405,3 +405,29 @@ img { max-width: 100%; }
 .pagination { --bs-pagination-color: var(--eg-green); --bs-pagination-active-bg: var(--eg-green); --bs-pagination-active-border-color: var(--eg-green); --bs-pagination-hover-color: var(--eg-green-dark); }
 .form-control:focus, .form-select:focus, .form-check-input:focus { border-color: var(--eg-green-light); box-shadow: 0 0 0 .25rem rgba(69,107,42,.2); }
 .form-check-input:checked { background-color: var(--eg-green); border-color: var(--eg-green); }
+
+/* ---------- 뉴스 상세 (support/news-view.html) ---------- */
+.news-view { max-width: 980px; margin: 0 auto; border-top: 1px solid #555; }
+.news-view .nv-head { text-align: center; padding: 1.6rem 1rem 1.4rem; border-bottom: 1px solid var(--eg-line); }
+.news-view .nv-title { font-size: clamp(1.05rem, 1.6vw, 1.3rem); font-weight: 700; color: var(--eg-ink); margin: 0 0 .5rem; line-height: 1.5; }
+.news-view .nv-date { font-size: .88rem; color: #999; }
+.news-view .nv-body { padding: 1.6rem 0 1.4rem; border-bottom: 1px solid var(--eg-line); }
+.news-view .nv-media { position: relative; background: #000; border-radius: .25rem; overflow: hidden; }
+.news-view .nv-video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+.news-view .nv-unmute {
+  position: absolute; left: 50%; top: 1rem; transform: translateX(-50%); border: 0; border-radius: 999px;
+  background: rgba(0,0,0,.72); color: #fff; padding: .5rem 1.1rem; font-weight: 600; font-size: .92rem; z-index: 2;
+}
+.news-view .nv-unmute:hover { background: var(--eg-green); }
+.news-view .nv-caption { font-size: .9rem; color: #555; line-height: 1.7; margin: .8rem 0 0; }
+.news-view .nv-article-img { text-align: center; margin: 0 0 1.4rem; }
+.news-view .nv-article-img img { max-width: 100%; width: 520px; border: 1px solid var(--eg-line); border-radius: .25rem; }
+.news-view .nv-text p { line-height: 1.9; color: #3b4236; margin-bottom: .9rem; }
+.news-view .nv-source { font-size: .88rem; color: #888; margin: 1rem 0 0; }
+.news-view .nv-links { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
+.news-view .nv-yt-btn { background: #ff0000; color: #fff; border: 0; }
+.news-view .nv-yt-btn:hover { background: #cc0000; color: #fff; }
+.news-view .nv-foot { text-align: center; padding: 1.4rem 0 0; }
+.news-view .nv-list-btn { background: #9a9a9a; color: #fff; border-radius: 0; padding: .45rem 2.2rem; font-size: .92rem; }
+.news-view .nv-list-btn:hover { background: var(--eg-green); color: #fff; }
+a.news-card { color: inherit; }

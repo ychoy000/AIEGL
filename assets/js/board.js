@@ -98,19 +98,15 @@
       if (!items.length) { grid.innerHTML = '<div class="col-12 text-center text-muted py-5">검색 결과가 없습니다.</div>'; }
       else {
         grid.innerHTML = items.map(function (p) {
-          return '<div class="col-sm-6 col-lg-3"><article class="news-card" tabindex="0" role="button" data-id="' + esc(p.id) + '" aria-label="' + esc(p.title) + ' 자세히 보기">' +
+          return '<div class="col-sm-6 col-lg-3"><a class="news-card d-block text-decoration-none" href="' + root + 'support/news-view.html?id=' + encodeURIComponent(p.id) + '" data-id="' + esc(p.id) + '" aria-label="' + esc(p.title) + ' 자세히 보기">' +
             '<div class="thumb"><img src="' + root + esc(p.thumb) + '" alt="" ></div>' +
             '<div class="body"><div class="title">' + esc(p.title) + '</div>' +
             '<div class="meta"><span>' + esc(p.date) + '</span>' +
-            (p.files.length ? '<span class="att"><i class="bi bi-paperclip"></i> ' + p.files.length + '</span>' : '') +
-            '</div></div></article></div>';
+            (p.video || p.youtube ? '<span class="att"><i class="bi bi-play-circle"></i> 영상</span>' : (p.files.length ? '<span class="att"><i class="bi bi-paperclip"></i> ' + p.files.length + '</span>' : '')) +
+            '</div></div></a></div>';
         }).join('');
       }
-      grid.querySelectorAll('.news-card').forEach(function (c) {
-        var post = data.filter(function (p) { return p.id === c.getAttribute('data-id'); })[0];
-        c.addEventListener('click', function () { openPost(post); });
-        c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPost(post); } });
-      });
+      /* 뉴스 카드는 상세 페이지(support/news-view.html)로 이동 — 모달 사용 안 함 */
       if (!limit) pagination(pager, list.length, page, function (p) { page = p; draw(); });
     }
     if (search) {
